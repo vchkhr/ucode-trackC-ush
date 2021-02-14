@@ -1,53 +1,23 @@
 #include "ush.h"
 
-static int count_args(char **args, int n_options) {
-    int n_args = 0;
+int mx_export(t_shell *shell, t_process *process) {
+    int amount_options = mx_options_count(process->arguments_amount, "p", "export", " [name[=value] ...] or export -p");
 
-    for (int i = n_options; args[i] != NULL; i++) {
-        n_args++;
-    }
-    return n_args;
-}
-
-static void print_export(t_export *export) {
-    t_export *head = export;
-
-    while (head != NULL) {
-        if (strncmp(head->name,"BASH_FUNC_",10) != 0) {
-            printf("export %s", head->name);
-            if (head->value)
-                printf("=\"%s\"", head->value);
-            printf("\n");
-        }
-        head = head->next;
-    }
-}
-
-void mx_clear_data(char *name, char *value) {
-    if(name)
-        free(name);
-    if(value)
-        free(value);
-}
-
-int mx_export(t_shell *m_s, t_process *p) {
-    int n_options = mx_count_options(p->argv, "p", "export",
-     " [name[=value] ...] or export -p");
-    int n_args = count_args(p->argv, n_options);
-    int i = 0;
-    int exit_code = 0;
-
-    if (n_options <  0)
+    if (amount_options <  0) {
         return 1;
-    if (n_args == 1)
-        print_export(m_s->exported);
+    }
+
+    int amount_arguments = mx_arguments_count_export(process->arguments_amount, amount_options);
+    int result = 0;
+    
+    if (amount_arguments == 1) {
+        mx_export_print(shell->exported);
+    }
     else {
-        i = n_options + 1;
-        while (p->argv[i] != NULL) {
-            mx_export_or_error(p->argv[i], m_s->exported,
-                               m_s->variables, &exit_code);
-            i++;
+        for (int i = amount_options + 1; process->arguments_amount[i] != NULL; i++) {
+            mx_check_export(process->arguments_amount[i], shell->exported, shell->variables, &result);
         }
     }
-    return exit_code;
+
+    return result;
 }

@@ -1,9 +1,9 @@
 #include "libmx.h"
 
 void mx_strdel(char **str) {
-    if (!(str == NULL)) {
-        free(*str);
-        *str = NULL;
-    }
+    if (!str || !(*str))
+        return;
+    
+    free((*str));
+    (*str) = NULL;
 }
-

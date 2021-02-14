@@ -1,24 +1,23 @@
 #include "libmx.h"
 
-char *mx_replace_substr(const char *str, const char *sub, const char *replace){
-    int diff;
-    char *res;
+char *mx_replace_substr(const char *str, const char *sub, const char *replace) {
+	int sum = mx_strlen(replace) - mx_strlen(sub);
+	int len = mx_strlen(str) + mx_count_substr(str, sub) * sum;
+	char *memory = mx_strnew(len);
 
-    if (!str || !sub || !replace)
-        return NULL;
-    diff = mx_strlen(sub) - mx_strlen(replace);
-    diff = diff < 0 ? -diff : diff;
-    res = mx_strnew(mx_strlen(str) + mx_count_substr(str, sub) * diff);
-    for (int i = 0, k = 0; i < mx_strlen(str); i++) {
-        if (!mx_get_substr_index(&str[i], sub)) {
-            for (int j = 0; j < mx_strlen(replace); j++, k++)
-                res[k] = replace[j];
-            i += mx_strlen(sub) - 1;
+	if (!str || !sub || !replace || mx_strlen(str) <= mx_strlen(sub))
+		return NULL;
+
+	for (int i = 0; i < len; i++, str++) {
+        if (!mx_strncmp((char *)str, (char *)sub, mx_strlen(sub))) {
+            str += mx_strlen(sub);
+
+            for (int j = 0; j < mx_strlen(replace); i++, j++)
+                memory[i] = replace[j];
         }
-        else {
-            res[k] = str[i];
-            k++;
-        }
+
+        memory[i] = *str;
     }
-    return res;
+
+    return memory;
 }

@@ -1,30 +1,21 @@
-#include "ush.h"
+#include "libmx.h"
 
-void mx_ast_clear_list(t_ast **list) {
-    t_ast *q = *list;
-    t_ast *tmp = NULL;
-
-    if (!(*list) || !list)
+void mx_clear_list (t_list **list) {
+    if (list == NULL || *list == NULL) {
         return;
-    while (q) {
-        if (q->token)
-            free(q->token);
-        if (q->args)
-            mx_del_strarr(&q->args);
-        if (q->left)
-            mx_ast_clear_list(&q->left);
-        tmp = q->next;
-        free(q);
-        q = tmp;
     }
+
+    t_list *first = *list;
+
+    if (!first) {
+        return;
+    }
+
+    for (; first != NULL;) {
+        t_list *temp = first->next;
+        free(first);
+        first = temp;
+    }
+    
     *list = NULL;
-}
-
-void mx_ast_clear_all(t_ast ***list) {
-    t_ast **q = *list;
-
-    for (int i = 0; q[i]; i++)
-        mx_ast_clear_list(&q[i]);
-    free(q);
-    q = NULL;
 }

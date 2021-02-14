@@ -1,11 +1,15 @@
 #include "libmx.h"
 
-int mx_strlen_arr(char **s) {
+int mx_strlen_arr(char **strings) {
+    if (!strings) {
+        return 0;
+    }
+
     int i = 0;
 
-    if (!s)
-        return 0;
-    while (s[i])
+    for (; strings[i];) {
         i++;
+    }
+    
     return i;
 }

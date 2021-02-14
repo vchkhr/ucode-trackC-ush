@@ -1,36 +1,34 @@
 #include "libmx.h"
 
-static char* math_hex(unsigned long nbr, int len) {
-    int ost = 0;
-    char *str = NULL;
+static int num_len(unsigned long num) {
+    int length = 0;
 
-    str = mx_strnew(len);
-    for (int i = 0; i < len; i++) {
-        ost = nbr % 16;
-        nbr = nbr / 16;
-        if (ost >= 0 && ost <= 9)
-            ost += 48;
-        if (ost >= 10 && ost <= 15)
-            ost += 87;
-        str[i] = ost;
+    while (num) {
+        num /= 16;
+        length++;
     }
-    mx_str_reverse(str);
-    return str;
+
+    return length;
 }
 
 char *mx_nbr_to_hex(unsigned long nbr) {
     unsigned long num = nbr;
-    int len = 0;
-    char *str = NULL;
+    int length = num_len(nbr);
+    char *number = mx_strnew(length);
 
-    if (nbr == 0) {
-        str = mx_strnew(2);
-        *str = '0';
-        return str;
+    if (nbr == 0)
+        return mx_strcpy(number, "0");
+
+    while (num) {
+        int temp = num % 16;
+
+        if (temp < 10)
+            number[--length] = 48 + temp;
+        if (temp >= 10)
+            number[--length] = 87 + temp;
+            
+        num /= 16;
     }
-    while (num != 0) {
-        num = num / 16;
-        len++;
-    }
-    return math_hex(nbr, len);
+
+    return number;
 }

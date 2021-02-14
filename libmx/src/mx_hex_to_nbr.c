@@ -1,15 +1,16 @@
 #include "libmx.h"
 
 unsigned long mx_hex_to_nbr(const char *hex) {
-	int len = 0;
-	unsigned long num = 0;
 	unsigned long base = 1;
+	unsigned long num = 0;
+	int len = 0;
 
-	if (hex != NULL)
+	if (hex)
 		while (hex[len])
 			len++;
 	else
 		return num;
+
 	for (int i = 0; i <= len; i++) {
 		if (hex[len - i] >= '0' && hex[len - i] <= '9') {
 			num = num + (hex[len - i] - 48) * base;
@@ -24,5 +25,6 @@ unsigned long mx_hex_to_nbr(const char *hex) {
 			base = base * 16;
 		}
 	}
+
 	return num;
 }

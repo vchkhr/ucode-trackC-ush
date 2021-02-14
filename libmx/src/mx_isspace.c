@@ -1,12 +1,8 @@
 #include "libmx.h"
 
-bool mx_isspace(char c) {
-    if (c == '\t' || c == '\n' || c == '\v'
-        || c == '\f' || c == '\r' || c == ' ') {
+bool mx_isspace(const char c) {
+    if ((c >= 9 && c <= 13) || c == 32)
         return true;
-    }
-    else {
-        return false;
-    }
+    
+    return false;
 }
-

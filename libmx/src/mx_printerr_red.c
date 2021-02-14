@@ -1,7 +1,7 @@
 #include "libmx.h"
 
-void mx_printerr_red(char *c) {
-    mx_printerr(RED);
-    mx_printerr(c);
-    mx_printerr(RESET);
+void mx_printerr_red(char *string) {
+    mx_printerr("\x1B[31m");
+    mx_printerr(string);
+    mx_printerr("\x1B[0m");
 }

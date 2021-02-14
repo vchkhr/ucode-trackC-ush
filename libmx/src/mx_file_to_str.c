@@ -1,35 +1,25 @@
 #include "libmx.h"
 
-static int mx_file_len(const char *file) {
-    short f = open(file, O_RDONLY);
-    short sz = 0;
-    int len = 0;
-    char buf;
+char *mx_file_to_str(const char *filename) {
+    if (!filename)
+        return NULL;
 
-    sz = read(f, &buf, 1);
-    while (sz > 0) {
-        sz = read(f, &buf, 1);
-	len++;
-    }
-    close(f);
-    return len;
-}
+    int file = open(filename, O_RDONLY);
 
-char *mx_file_to_str(const char *file) {
-    int f = open(file, O_RDONLY);
-
-    if (f == -1) {
-        close(f);
+    if (file < 0) {
+        close(file);
         return NULL;
     }
 
-    int sz = 0;
-    int size = mx_file_len(file);
-    if (size == 0)
-        return NULL;
-    char *newstr = mx_strnew(size);
-    sz = read(f, newstr, size);
-    close(f);
-    return newstr;
-}
+    int filelen = mx_filelen(filename);
 
+    if (filelen == 0)
+        return NULL;
+
+    char *str = mx_strnew(filelen);
+
+    read(file, str, filelen);
+    close(file);
+
+    return str;
+}

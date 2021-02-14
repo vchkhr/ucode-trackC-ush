@@ -1,11 +1,13 @@
 #include "libmx.h"
 
-void *mx_memcpy(void *restrict dst, const void *restrict src, size_t n) {
-    char *p_dst = dst;
-    const char *p_src = src;
+void *mx_memcpy(void *restrict destination, const void *restrict src, size_t amount) {
+    char *destination_p = destination;
+    const char *src_p = src;
 
-    while (n--)
-        *p_dst++ = *p_src++;
-    return dst;
+    for (; amount--;) {
+        *destination_p++ = *src_p++;
+    }
+    
+    return destination;
 }
 

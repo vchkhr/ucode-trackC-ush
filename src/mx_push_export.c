@@ -1,34 +1,31 @@
 #include "ush.h"
 
-static t_export *create_node(void *name, void *value) {
-    t_export *node =  (t_export *)malloc(sizeof(t_export));
+void mx_export_push(t_export **list, void *name, void *value) {
+    t_export *temp;
+    t_export *process;
 
-    node->name = strdup(name);
-    if(!value)
-        node->value = strdup("");
-    else
-        node->value = strdup(value);
-    node->next = NULL;
-    return node;
-}
-
-void mx_push_export(t_export **list, void *name, void *value) {
-    t_export *tmp;
-    t_export *p;
-
-    if (!list)
+    if (!list) {
         return;
-    tmp = create_node(name, value);  // Create new
-    if (!tmp)
+    }
+
+    temp = mx_create_node_export(name, value);
+
+    if (!temp) {
         return;
-    p = *list;
-    if (*list == NULL) {  // Find Null-node
-        *list = tmp;
+    }
+
+    process = *list;
+
+    if (*list == NULL) {
+        *list = temp;
+
         return;
     }
     else {
-        while (p->next != NULL)  // Find Null-node
-            p = p->next;
-        p->next = tmp;
+        for (; process->next != NULL;) {
+            process = process->next;
+        }
+        
+        process->next = temp;
     }
 }

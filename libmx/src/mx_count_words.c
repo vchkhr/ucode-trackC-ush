@@ -1,22 +1,22 @@
 #include "libmx.h"
 
 int mx_count_words(const char *str, char c) {
-    int count = 0;
-    int flag = 0;
-    int len = mx_strlen(str);
+    bool state = true;
+    int wordcount = 0;
+    
+    if (str == NULL)
+        return -1;
 
-    if (str && c) {
-        for (int i = 0; i < len; i++) {
-            if (str[i] == c)
-                flag = 0;
-            else if ((str[i] != c) && (flag == 0)) {
-                flag = 1;
-                count++;
-            }
-            else
-                flag = 1;
+    while (*str) {
+        if (*str == c)
+            state = true;
+        else if (state) {
+            state = false;
+            wordcount++;
         }
-    }
-    return count;
-}
 
+        str++;
+    }
+
+    return wordcount;
+}
